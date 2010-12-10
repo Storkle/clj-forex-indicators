@@ -25,7 +25,9 @@ public class ATR extends Indicator {
 			double val3 = Math.abs(low(i) - close(i + 1));
 			tr.set(i, Math.max(Math.max(val1, val2), val3));
 		} 
-		main.ex();
-		return 0;
+		//TODO: what if we cant calculate anything? Then we need to return appropriate: this is good unit test ! 
+		//what if mva is only last, lets say, 30? We still dont want to do this? But what if it is 0 - then we still dont want it!
+		//TODO: FIX!!!!
+		return main.ex(); 
 	}	
 }
