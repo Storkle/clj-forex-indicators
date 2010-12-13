@@ -1,13 +1,19 @@
 package indicators.collection;
-
 import java.util.Arrays;
 import java.util.Iterator;
-  
+
 public class RingBufferArray implements  ISeq {
 	public double[] elements;
-	private int size;
+	private int size; 
 	private int head=0;  
 	private int start = -1; //keep track of number of elements
+	
+	public RingBufferArray(int capacity,RingBufferArray a) {
+		this(capacity);
+		for (int i=a.size()-1;i>=0;i--) {
+			add(a.get(i));
+		}
+	}
 	
 	//what to return?
 	public int ex() {return -1;}

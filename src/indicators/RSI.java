@@ -3,7 +3,7 @@ import indicators.core.*;
 import indicators.collection.*;
 
 public class RSI extends PriceIndicator {
-	public RSI(PriceStream Bars, IPSeq Price, int period) {
+	public RSI(IPriceStream Bars, ISeq Price, int period) {
 		super(Bars, Price); 
 		this.period = period;
 		Init();

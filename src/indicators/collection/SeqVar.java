@@ -4,16 +4,18 @@ import indicators.core.*;
  
 public class SeqVar extends RingBufferArray implements ISeq, IReference {
 	long reference;
-	Indicator ind;  
-	//IMPLEMENT Reference  
+	Indicator ind;     
 	public void update () { 
-		this.shift(ind.diff(reference));  
+		this.shift(ind.diff(reference));   
 	}	
-	public long diff(long ref) {
-		return ref-reference;
-	}
+	//IMPLEMENT Reference  
+	@Override
 	public long head() {
-		return reference;
+		return ind.head();
+	}
+	@Override
+	public long diff(long r) {
+		return ind.diff(r);
 	}
 	// 
 	public SeqVar(Indicator ind) {
@@ -22,5 +24,4 @@ public class SeqVar extends RingBufferArray implements ISeq, IReference {
 		this.ind = ind;
 		reference = ind.head();		
 	} 
-
 }

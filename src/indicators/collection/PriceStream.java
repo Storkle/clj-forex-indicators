@@ -1,167 +1,164 @@
 package indicators.collection;
 
-//this is a mutable container for the immutable ippricestream so that we can simply pass this
-//once into a group of indicators
-//surely theres an easier way to 'redirect' the method calls to the IPPriceSTream?
-public class PriceStream implements IReference {
-	IPPriceStream stream;
-	public PriceStream(IPPriceStream stream) {
-		this.stream = stream;
+import java.util.concurrent.locks.*;
+
+//Used in the proper context, a PriceStream does not need a lock except when changing data.
+ 
+public class PriceStream implements IPriceStream {
+	public RingBufferArray Open, High, Low, Close;
+	private ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
+
+	// Lock
+	public void readLock() {
+		lock.readLock().lock();
 	}
-    public int size () {return stream.size();}
-	public IPPriceStream clone() {return stream.clone();} 
-	public IPPriceStream add(double open,double high,double low,double close) {
-		return stream.add(open,high,low,close);
+
+	public void readUnlock() {
+		lock.readLock().unlock();
 	}
-	//convenience methods
-	public Double open(int index) {
-		return stream.open(index);
+
+	public void writeLock() {
+		lock.writeLock().lock();
 	}
-	public Double open() {
-		return stream.open(); 
+
+	public void writeUnlock() {
+		lock.writeLock().unlock();
 	}
-	public Double low(int index) {
-		return stream.low(index); 
+
+	// constructors
+	public PriceStream() {
+		this(1000);
 	}
-	public Double low() {
-		return stream.low();
+
+	public PriceStream(PriceStream p) {
+		this(p.capacity(), p);
 	}
-	public Double close(int index) {
-		return stream.close(index);
+
+	public PriceStream(int capacity, PriceStream p) {
+		try {
+			p.readLock();
+			Close = new RingBufferArray(capacity, p.Close);
+			Open = new RingBufferArray(capacity, p.Open);
+			High = new RingBufferArray(capacity, p.High);
+			Low = new RingBufferArray(capacity, p.Low);
+			ref = p.head();
+		} finally {
+			p.readUnlock();
+		}
 	}
-	public Double close() {
-		return stream.close();
+
+	public PriceStream(int size) {
+		Open = new RingBufferArray(size);
+		High = new RingBufferArray(size);
+		Low = new RingBufferArray(size);
+		Close = new RingBufferArray(size);
 	}
-	public Double high(int index) {
-		return stream.high(index);
-	}
-	public Double high() {
-		return stream.high();
-	}
+	
 	@Override
-	public long diff(long arg0) {
-		// TODO Auto-generated method stub
-		return stream.diff(arg0);
+	public void add(double open, double high, double low, double close) {
+		Open.add(open);
+		High.add(high);
+		Low.add(low);
+		Close.add(close);
+		++ref;
 	}
+
+	// CONVENIENCE methods
+	@Override
+	public double close(int i) {
+		return Close.get(i);
+	}
+
+	@Override
+	public double close() {
+		return close(0);
+	}
+
+	@Override
+	public double high(int i) {
+		return High.get(i);
+	}
+
+	@Override
+	public double high() {
+		return high(0);
+	}
+
+	@Override
+	public double low(int i) {
+		return Low.get(i);
+	}
+
+	@Override
+	public double low() {
+		return low(0);
+	}
+
+	@Override
+	public double open(int i) {
+		return Open.get(i);
+	}
+
+	@Override
+	public double open() {
+		return open(0);
+	}
+
+	@Override
+	public int size() {
+		return High.size();
+	}
+
+	// IMPLEMENT Referece
+	long ref;
+
+	@Override
+	public long diff(long r) {
+		return ref - r;
+	}
+
 	@Override
 	public long head() {
-		// TODO Auto-generated method stub
-		return stream.head();
+		return ref;
 	}
+
+	public void update(PriceStream p) {
+		try {
+			p.readLock();
+			long a = p.diff(ref);
+			if (a == 0) {
+				setHead(p.open(), p.high(), p.low(), p.close());
+			} else {
+				int capacity = capacity();
+				Close = new RingBufferArray(capacity, p.Close);
+				Open = new RingBufferArray(capacity, p.Open);
+				High = new RingBufferArray(capacity, p.High);
+				Low = new RingBufferArray(capacity, p.Low);
+				ref = p.head();
+			}
+		} finally {
+			p.readUnlock();
+		}
+	}
+
+	@Override
+	public int capacity() {
+		return High.capacity();
+	}
+
+	@Override
+	public void setHead(double open, double high, double low, double close) {
+		// TODO Auto-generated method stub
+		High.set(0, high);
+		Low.set(0, low);
+		Close.set(0, close);
+		Open.set(0, open);
+	}
+
 	@Override
 	public void update() {
 		// TODO Auto-generated method stub
-	    stream.update();
+
 	}
-	
-	
-	
-	
-	
-///////////////////////////////////////////////////////
-	///////////////////////////////////////////////////////
-	//CREATE a PSeq for High,Low,Open,and Close
-	public IPSeq High =  new IPSeq () {
-		@Override 
-		public int capacity() {
-			return size();
-		}
-		@Override
-		public double get(int i) {
-			return high(i);
-		}
-		@Override
-		public double get() {
-			return high();
-		}  
-		@Override
-		public int size() {
-			return PriceStream.this.size();
-		}
-		@Override
-		public int start() {
-			return 0;
-		}
-		@Override
-		public double[] toArray() {
-			return null;
-		}};
-		
-		public IPSeq Open =  new IPSeq () {
- 			@Override 
-			public int capacity() {
-				return size();
-			}
-			@Override
-			public double get(int i) {
-				return open(i);
-			}
-			@Override
-			public double get() {
-				return open();
-			}
-			@Override
-			public int size() {
-				return PriceStream.this.size();
-			}
-			@Override
-			public int start() {
-				return 0;  
-			}
-			@Override
-			public double[] toArray() {
-				return null;
-			}};
-			//close
-			public IPSeq Close =  new IPSeq () {
-				@Override 
-				public int capacity() {
-					return size();
-				}
-				@Override
-				public double get(int i) {
-					return close(i);
-				}
-				@Override
-				public double get() {
-					return close();
-				}
-				@Override
-				public int size() {
-					return PriceStream.this.size();
-				}
-				@Override
-				public int start() {
-					return 0;
-				}
-				@Override
-				public double[] toArray() {
-					return null;
-				}};
-				//low
-				public IPSeq Low =  new IPSeq () {
-					@Override 
-					public int capacity() {
-						return size();
-					}
-					@Override
-					public double get(int i) {
-						return low(i);
-					}
-					@Override
-					public double get() {
-						return low();
-					}
-					@Override
-					public int size() {
-						return PriceStream.this.size();
-					}
-					@Override
-					public int start() {
-						return 0;
-					}
-					@Override
-					public double[] toArray() {
-						return null;
-					}};
+
 }

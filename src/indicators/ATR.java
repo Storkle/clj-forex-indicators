@@ -3,7 +3,7 @@ import indicators.core.*;
 import indicators.collection.*;
 
 public class ATR extends Indicator {
-	public ATR(PriceStream Bars,int period) {
+	public ATR(IPriceStream Bars,int period) {
 		super(Bars);
 		Check.is(period>0,"in ATR, period must be >0");
 		this.period = period;

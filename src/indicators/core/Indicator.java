@@ -11,30 +11,29 @@ interface IIndicator  {
 	int Execute(int rates_total,int prev);
 } 
    
-//TODO:: implement in clojure, it really is getting quite verbose
 public abstract class Indicator implements IReference,IIndicator,ISeq {
-	protected PriceStream Bars;
-	ReadWriteLock lock = new ReentrantReadWriteLock();
     int prev; 
-    
+	  
+	protected IPriceStream Bars;
+	ReadWriteLock lock = new ReentrantReadWriteLock(); 
     public ISeq main = new RingBufferArray();
    
-	public Indicator(PriceStream Bars) {
+	public Indicator(IPriceStream Bars) {
 		this.Bars = Bars;
 	}
 	
+	//ADD a reference 
+	private Vector<IReference> references = new Vector<IReference>();
+	public void addRef (IReference ref) {
+		references.add(ref);	
+	}
+	
+	//IMPLEMENT Iterable
 	@Override
 	public Iterator<Double> iterator() {
 		return main.iterator();
 	}
 	
-	////////////////////////////////////////
-	///////////////////////////////////////END OF PSeq for High,Low,Open,Close
-	//ADD a reference
-	private Vector<IReference> references = new Vector<IReference>();
-	public void addRef (IReference ref) {
-		references.add(ref);	
-	}
 	//IMPLEMENTS Seq
 	public int capacity () {
 		return main.capacity();
@@ -66,14 +65,19 @@ public abstract class Indicator implements IReference,IIndicator,ISeq {
 	
 	//IMPLEMENTS Reference
 	long head = -1;
+	@Override  
+	//TODO: this is thread safe because all indicators are updated after the price stream is updated! so, update price stream, then update indicators (serially)
 	public void update() {
 		if (head!=-1) {
-		shift(Bars.head()-head); 
-		}
+			long d = Bars.diff(head);	
+			shift(d); 
+			prev = Math.max((int)(prev-d),0);
+		} 
 		head = Bars.head(); 
-		for (IReference ref:references) 
-			ref.update();	
-	}
+		for (IReference r:references) 
+			r.update(); 	
+	} 
+	
 	public long diff(long ref){
 		return Bars.diff(ref);	
 	}
@@ -85,24 +89,23 @@ public abstract class Indicator implements IReference,IIndicator,ISeq {
 		return Execute(size,prev);
 	}
 	boolean stopped = false;
-	private int rates_total() {
-		return Math.min(Bars.size(),capacity());
-	}
+
 	public int ex() {
 		if (stopped==true) {
 			throw new RuntimeException("indicator is deinitialized - cant use it!");
 		}
-		try { //TODO: also lock PPriceStream????
-			lock.writeLock().lock();
-			update(); 
-			prev = call_execute(rates_total(),prev);//call_execute? perhaps use something else?
+		try {
+			lock.writeLock().lock(); Bars.readLock();
+			//TODO: uncomment
+			//update(Bars); 
+			prev = call_execute(rates_total(),prev);
 			if (prev>0) prev=prev-1;
-		}  
-		catch(Exception e){
+		}   
+		catch(Exception e) {
 			stopped=true;Destroy();e.printStackTrace(); throw new RuntimeException(e.getMessage());
 		}
 		finally {
-			lock.writeLock().unlock();
+			lock.writeLock().unlock(); Bars.readUnlock();
 		}
 		return prev;
 	}
@@ -111,6 +114,10 @@ public abstract class Indicator implements IReference,IIndicator,ISeq {
 	public void Destroy() {};
 	
 	//Convenience methods
+	private int rates_total() {
+		return Math.min(Bars.size(),capacity());
+	}
+	
 	public int limit () {
 		return (rates_total()-prev-1); //rates_total-prev-1
 	}

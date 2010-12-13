@@ -1,4 +1,4 @@
-package indicators._test;
+package indicators.utils;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.PrintStream;

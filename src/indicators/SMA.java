@@ -4,7 +4,7 @@ import indicators.core.*;
 import indicators.collection.*;
 
 public class SMA extends PriceIndicator {
-	public SMA(PriceStream Bars,IPSeq price, int period) {
+	public SMA(IPriceStream Bars,ISeq price, int period) {
 		super(Bars,price); 
 		Check.is(period>0,"in SMA, invalid parameter period %s",period);
 		this.period = period;  

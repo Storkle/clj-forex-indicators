@@ -3,7 +3,7 @@ import indicators.core.*;
 
 import indicators.collection.*;
 public class EMA extends PriceIndicator {
-	public EMA(PriceStream Bars, IPSeq price,int period) {
+	public EMA(IPriceStream Bars, ISeq price,int period) {
 		super(Bars, price);
 		Check.is(period>0,"in EMA, invalid parameter period %s",period);
 		this.period=period;

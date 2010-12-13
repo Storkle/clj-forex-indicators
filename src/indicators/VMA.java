@@ -6,7 +6,7 @@ import indicators.core.*;
 import indicators.collection.*;
 //TODO: fix: doesn't quite work  as can be seen with the metatrader indicator plotter
 public class VMA extends Indicator {
-	public VMA(PriceStream stream, int adx_period, int weight, int period) {
+	public VMA(IPriceStream stream, int adx_period, int weight, int period) {
 		super(stream);  
 		this.adx_period = adx_period;
 		this.weight = weight;

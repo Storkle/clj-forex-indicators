@@ -1,4 +1,4 @@
-package indicators._test;
+package indicators.utils;
 /*
 License for Java 1.5 'Tiger': A Developer's Notebook
      (O'Reilly) example package

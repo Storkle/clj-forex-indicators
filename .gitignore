@@ -8,3 +8,5 @@ lib
 /clojure-src.jar
 /clojure.jar
 *~
+/src/myprobe.probeinfo
+/src/myprobe.probescript

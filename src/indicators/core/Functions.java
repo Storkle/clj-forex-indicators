@@ -2,7 +2,7 @@ package indicators.core;
 import indicators.collection.*;
 
 public class Functions {
-	public static double Highest (IPSeq seq, int from, int length) {
+	public static double Highest (ISeq seq, int from, int length) {
 		if (length<1) 
 			throw new RuntimeException("Invalid length "+length+" passed to Highest");
 		Double max = null;
@@ -14,7 +14,7 @@ public class Functions {
 		return max;
 	}
 	
-	public static double Lowest (IPSeq seq, int from, int length) {
+	public static double Lowest (ISeq seq, int from, int length) {
 		if (length<1) 
 			throw new RuntimeException("Invalid length "+length+" passed to Lowest");
 		Double min = null;

@@ -2,11 +2,11 @@ package indicators.core;
 import indicators.collection.*;
 //reuse more by making protected?
 public abstract class PriceIndicator  extends Indicator {
-	IPSeq Price;  
-	public PriceIndicator(PriceStream Bars,IPSeq price) {
+	ISeq Price;  
+	public PriceIndicator(IPriceStream Bars,ISeq price2) {
 		super(Bars);
-		this.Price = price;
-	} 
+		this.Price = price2;
+	}  
 	protected int call_execute(int bars_total,int prev) {
 		return Execute(rates_total(),prev);  
 	} 
