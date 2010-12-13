@@ -6,8 +6,6 @@
 	<classpathentry kind="lib" path="clojure-contrib.jar" sourcepath="clojure-contrib-src.jar"/>
 	<classpathentry kind="lib" path="classes"/>
 	<classpathentry kind="lib" path="/home/seth/Dropbox/.rep/clj-forex-indicators/lib/clj-forex-utils-0.1.jar"/>
-	<classpathentry kind="lib" path="lib/clj-ds.jar"/>
-	<classpathentry kind="lib" path="lib/jsr166y.jar"/>
 	<classpathentry kind="con" path="org.eclipse.tptp.platform.instrumentation.ui.ContainerInitializer/Build to Manage Libraries"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
