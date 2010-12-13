@@ -3,18 +3,18 @@
 
 package indicators;
 import indicators.core.*;
-
+import indicators.collection.*;
 //TODO: fix: doesn't quite work  as can be seen with the metatrader indicator plotter
 public class VMA extends Indicator {
 	public VMA(PriceStream stream, int adx_period, int weight, int period) {
-		super(stream);
+		super(stream);  
 		this.adx_period = adx_period;
 		this.weight = weight;
 		this.period = period;
 		Init(); main = average;
 	}
  
-	Seq MA, ADX, ADXR, sPDI, sMDI, STR, VarMA;
+	ISeq MA, ADX, ADXR, sPDI, sMDI, STR, VarMA;
 	public Indicator average;
 	@input
 	int adx_period = 2;

@@ -1,21 +1,19 @@
-package indicators.collections;
-
-import indicators.core.Seq;
+package indicators.collection;
 
 import java.util.Arrays;
 import java.util.Iterator;
- 
-public class RingBufferArray implements Seq {
+  
+public class RingBufferArray implements  ISeq {
 	public double[] elements;
 	private int size;
-	private int head=0;
+	private int head=0;  
 	private int start = -1; //keep track of number of elements
 	
 	//what to return?
 	public int ex() {return -1;}
 	
 	public RingBufferArray() {
-		this(300); 
+		this(1000);
 	}
 	public RingBufferArray(int size) {
 		elements = new double[size];
@@ -28,7 +26,7 @@ public class RingBufferArray implements Seq {
 		a.elements =Arrays.copyOfRange(array,begin,begin+length);//TODO: head points at last one - is this good? I think the first 0 is oldest!
 		a.start = max-1; a.head = max-1;  
 		return a;   
-	}  
+	}   
 	 
 	public int start() {
 		return start;
@@ -93,7 +91,7 @@ public class RingBufferArray implements Seq {
 		return elements[index]; 
 	}
 
-	 class RingIterator implements Iterator {
+	 class RingIterator implements Iterator<Double> {
 		RingBufferArray a;
 		public RingIterator (RingBufferArray a) {
 			this.a = a;
@@ -106,7 +104,7 @@ public class RingBufferArray implements Seq {
 		}
 
 		@Override
-		public Object next() {
+		public Double next() {
 			// TODO Auto-generated method stub
 			double n = a.get(index); ++index;
 			return n;
@@ -120,7 +118,7 @@ public class RingBufferArray implements Seq {
 	}
 
 	@Override
-	public Iterator iterator() {
+	public Iterator<Double> iterator() {
 		// TODO Auto-generated method stub
 		return new RingIterator(this);
 	}

@@ -1,10 +1,11 @@
-package indicators.core;
-import indicators.collections.RingBufferArray;
-
-public class SeqVar extends RingBufferArray implements Reference {
+package indicators.collection;
+import indicators.collection.RingBufferArray;
+import indicators.core.*;
+ 
+public class SeqVar extends RingBufferArray implements ISeq, IReference {
 	long reference;
-	Indicator ind; 
-	//IMPLEMENT Reference 
+	Indicator ind;  
+	//IMPLEMENT Reference  
 	public void update () { 
 		this.shift(ind.diff(reference));  
 	}	

@@ -1,14 +1,15 @@
 package indicators;
 import indicators.core.*;
+import indicators.collection.*;
 
 public class ATR extends Indicator {
 	public ATR(PriceStream Bars,int period) {
 		super(Bars);
 		Check.is(period>0,"in ATR, period must be >0");
 		this.period = period;
-		main = new SMA(Bars,tr,period);
+		main = new SMA(Bars,tr,period); 
 	} 
-	Seq tr = new SeqVar(this); 
+	ISeq tr = new SeqVar(this); 
 	@input
 	int period = 14;
 	//TODO

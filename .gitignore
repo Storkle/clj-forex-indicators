@@ -3,3 +3,8 @@ classes
 lib
 /clj-forex-indicators-0.1.jar
 /pom.xml
+/clojure-contrib-src.jar
+/clojure-contrib.jar
+/clojure-src.jar
+/clojure.jar
+*~

@@ -1,15 +1,16 @@
 package indicators;
 import indicators.core.*;
+import indicators.collection.*;
 
 public class RSI extends PriceIndicator {
-	public RSI(PriceStream Bars, Seq Price, int period) {
+	public RSI(PriceStream Bars, IPSeq Price, int period) {
 		super(Bars, Price); 
 		this.period = period;
 		Init();
 	}
  
-	Seq averageGain = new SeqVar(this);
-	Seq averageLoss = new SeqVar(this);
+	ISeq averageGain = new SeqVar(this);
+	ISeq averageLoss = new SeqVar(this);
 	@input
 	int period = 14;
 

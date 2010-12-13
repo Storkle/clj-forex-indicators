@@ -1,6 +1,6 @@
 package indicators.core;
+import indicators.collection.*;
 
-import indicators.collections.RingBufferArray;
 
 import java.util.Iterator;
 import java.util.Vector;
@@ -10,13 +10,15 @@ interface IIndicator  {
 	void Destroy();
 	int Execute(int rates_total,int prev);
 } 
-  
-public abstract class Indicator implements Reference,IIndicator,Seq {
+   
+//TODO:: implement in clojure, it really is getting quite verbose
+public abstract class Indicator implements IReference,IIndicator,ISeq {
 	protected PriceStream Bars;
 	ReadWriteLock lock = new ReentrantReadWriteLock();
-     int prev;
-    public Seq main = new RingBufferArray();
-  
+    int prev; 
+    
+    public ISeq main = new RingBufferArray();
+   
 	public Indicator(PriceStream Bars) {
 		this.Bars = Bars;
 	}
@@ -26,9 +28,11 @@ public abstract class Indicator implements Reference,IIndicator,Seq {
 		return main.iterator();
 	}
 	
+	////////////////////////////////////////
+	///////////////////////////////////////END OF PSeq for High,Low,Open,Close
 	//ADD a reference
-	private Vector<Reference> references = new Vector<Reference>();
-	public void addRef (Reference ref) {
+	private Vector<IReference> references = new Vector<IReference>();
+	public void addRef (IReference ref) {
 		references.add(ref);	
 	}
 	//IMPLEMENTS Seq
@@ -67,7 +71,7 @@ public abstract class Indicator implements Reference,IIndicator,Seq {
 		shift(Bars.head()-head); 
 		}
 		head = Bars.head(); 
-		for (Reference ref:references) 
+		for (IReference ref:references) 
 			ref.update();	
 	}
 	public long diff(long ref){
@@ -88,7 +92,7 @@ public abstract class Indicator implements Reference,IIndicator,Seq {
 		if (stopped==true) {
 			throw new RuntimeException("indicator is deinitialized - cant use it!");
 		}
-		try {
+		try { //TODO: also lock PPriceStream????
 			lock.writeLock().lock();
 			update(); 
 			prev = call_execute(rates_total(),prev);//call_execute? perhaps use something else?
@@ -111,35 +115,35 @@ public abstract class Indicator implements Reference,IIndicator,Seq {
 		return (rates_total()-prev-1); //rates_total-prev-1
 	}
 	public Double open(int index) {
-		return Bars.Open.get(index);
+		return Bars.open(index);//Open.get(index);
 	}
 
 	public Double open() {
-		return Bars.Open.get(0);
+		return Bars.open(0);
 	}
 
 	public Double low(int index) {
-		return Bars.Low.get(index);
+		return Bars.low(index);
 	}
 
 	public Double low() {
-		return Bars.Low.get(0);
+		return Bars.low(0);
 	}
 
 	public Double close(int index) {
-		return Bars.Close.get(index);
+		return Bars.close(index);
 	}
 
 	public Double close() {
-		return Bars.Close.get(0);
+		return Bars.close(0);
 	}
 
 	public Double high(int index) {
-		return Bars.High.get(index);
+		return Bars.high(index);
 	}
 
 	public Double high() {
-		return Bars.High.get(0);
+		return Bars.high(0);
 	}
 
 }

@@ -3,7 +3,9 @@ package indicators.ta;
 //i really didn't feel like sorting through the indicators which required memory, so.... And implementing all of the 'core'
 //indicators is a great way to test out how the indicator interface works! And in the long run, i think this will pay off more.
 //though maybe not.... maybe in the beginning...
- 
+//NOTE: I have also changed the interface, so below wont 'work' anymore, have to update it to newest
+//indicator interface. Im leaving it here anyways just in case....
+
 /*package indicator.ta;
 import indicator.collections.RingBufferArray;
 import indicator.core.Indicator;

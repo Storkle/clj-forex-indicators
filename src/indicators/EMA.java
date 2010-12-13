@@ -1,11 +1,9 @@
 package indicators;
-import indicators.core.Check;
-import indicators.core.PriceIndicator;
-import indicators.core.PriceStream;
-import indicators.core.Seq;
-import indicators.core.input;
+import indicators.core.*;
+
+import indicators.collection.*;
 public class EMA extends PriceIndicator {
-	public EMA(PriceStream Bars, Seq price,int period) {
+	public EMA(PriceStream Bars, IPSeq price,int period) {
 		super(Bars, price);
 		Check.is(period>0,"in EMA, invalid parameter period %s",period);
 		this.period=period;

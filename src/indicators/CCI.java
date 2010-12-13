@@ -1,5 +1,6 @@
 package indicators;
 import indicators.core.*;
+import indicators.collection.*;
 
 public class CCI extends Indicator {
 	public CCI(PriceStream Bars, int period) {
