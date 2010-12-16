@@ -97,7 +97,7 @@ public abstract class Indicator implements IReference,IIndicator,ISeq {
 		try {
 			lock.writeLock().lock(); Bars.readLock();
 			//TODO: uncomment
-			//update(Bars); 
+			update(); 
 			prev = call_execute(rates_total(),prev);
 			if (prev>0) prev=prev-1;
 		}   

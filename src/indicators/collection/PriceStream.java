@@ -128,7 +128,7 @@ public class PriceStream implements IPriceStream {
 			long a = p.diff(ref);
 			if (a == 0) {
 				setHead(p.open(), p.high(), p.low(), p.close());
-			} else {
+			} else { 
 				int capacity = capacity();
 				Close = new RingBufferArray(capacity, p.Close);
 				Open = new RingBufferArray(capacity, p.Open);
