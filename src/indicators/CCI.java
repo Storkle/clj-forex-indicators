@@ -15,8 +15,8 @@ public class CCI extends Indicator {
 	SeqVar tp = new SeqVar(this);
 	SeqVar dev = new SeqVar(this);
 	@input
-	int period = 14;
-
+	int period = 14; 
+ 
 	public int Execute(int rates_total,int prev) {
 		// calculate TP
 		if (rates_total<period) return 0;
@@ -26,15 +26,15 @@ public class CCI extends Indicator {
 		// calculate simple moving average of typical price (SMATP)
 		sma.ex(); 
 		// calculate absolute value of different between SMATP and typical price
-		for (int i=sma.start();i>=0;i--) {
-			double currentSMA = sma.get(i);
-			double sum = 0;
+		for (int i=sma.start(limit);i>=0;i--) { //if start>=capacity: start->-1,  
+			double currentSMA = sma.get(i);  
+			double sum = 0; 
 			for (int j = i; j < i+period; j++)
 				sum+=Math.abs(currentSMA-tp.get(j));
 			dev.set(i,sum*.015/period);
-		}
+		} 
 		// calculate cci
-		for (int i = dev.start(); i >= 0; i--)
+		for (int i = dev.start(limit); i >= 0; i--)
 			set(i, (tp.get(i)-sma.get(i)) /  dev.get(i)); //-154.91606714625223
 		return rates_total;
 	}

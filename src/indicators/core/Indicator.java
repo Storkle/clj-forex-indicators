@@ -19,7 +19,7 @@ public abstract class Indicator implements IReference,IIndicator,ISeq {
     public ISeq main = new RingBufferArray();
    
 	public Indicator(IPriceStream Bars) {
-		this.Bars = Bars;
+		this.Bars = Bars; this.head = Bars.head();
 	}
 	
 	//ADD a reference 
@@ -56,6 +56,12 @@ public abstract class Indicator implements IReference,IIndicator,ISeq {
 	public double[] toArray() {
 		return main.toArray();
 	}
+	
+	public int start(int limit) {
+		return main.start(limit);
+	} 
+	
+	
 	public int start () {
 		return main.start();
 	}
@@ -74,7 +80,7 @@ public abstract class Indicator implements IReference,IIndicator,ISeq {
 			prev = Math.max((int)(prev-d),0);
 		} 
 		head = Bars.head(); 
-		for (IReference r:references) 
+		for (IReference r:references)    
 			r.update(); 	
 	} 
 	
@@ -99,7 +105,7 @@ public abstract class Indicator implements IReference,IIndicator,ISeq {
 			//TODO: uncomment
 			update(); 
 			prev = call_execute(rates_total(),prev);
-			if (prev>0) prev=prev-1;
+			//if (prev>0) prev=prev-1;
 		}   
 		catch(Exception e) {
 			stopped=true;Destroy();e.printStackTrace(); throw new RuntimeException(e.getMessage());
@@ -119,7 +125,7 @@ public abstract class Indicator implements IReference,IIndicator,ISeq {
 	}
 	
 	public int limit () {
-		return (rates_total()-prev-1); //rates_total-prev-1
+		return Math.max((rates_total()-prev-1),0); //rates_total-prev-1
 	}
 	public Double open(int index) {
 		return Bars.open(index);//Open.get(index);

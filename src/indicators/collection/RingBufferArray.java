@@ -1,12 +1,13 @@
 package indicators.collection;
-import java.util.Arrays;
 import java.util.Iterator;
 
 public class RingBufferArray implements  ISeq {
 	public double[] elements;
-	private int size; 
+	private int capacity; 
 	private int head=0;  
-	private int start = -1; //keep track of number of elements
+
+	private int max = -1;
+	private int min = -1;
 	
 	public RingBufferArray(int capacity,RingBufferArray a) {
 		this(capacity);
@@ -21,68 +22,92 @@ public class RingBufferArray implements  ISeq {
 	public RingBufferArray() {
 		this(1000);
 	}
-	public RingBufferArray(int size) {
-		elements = new double[size];
-		this.size=size; 
+	public RingBufferArray(int capacity) {
+		elements = new double[capacity];
+		this.capacity=capacity; 
 	} 
 	
-	//files in any zeros if begin+length-1 is greater than max array index;
-	public static RingBufferArray create(double[]array,int begin,int length, int max) {
+	//TODO: allow a capacity greather than length
+	/*public static RingBufferArray create(double[]array,int begin,int length) {
 		RingBufferArray a = new RingBufferArray(length);
 		a.elements =Arrays.copyOfRange(array,begin,begin+length);//TODO: head points at last one - is this good? I think the first 0 is oldest!
-		a.start = max-1; a.head = max-1;  
+		a.start = length-1; a.head = length-1;  
 		return a;   
 	}   
-	 
-	public int start() {
-		return start;
-	} 
+	 */
 	
 	public void shift (long by) {
 		long shiftBy =0;
-		if (by>size)
-			shiftBy = size;
+		if (by>capacity)
+			shiftBy = capacity;
 		else 
 			shiftBy = by;
 		for (int i=0;i<shiftBy;i++) {
-			this.add(0);
+			this.pad(0); //add_without_increasing_start?
 		}
 	}
 	
 	public int capacity() {
-		return size;
+		return capacity;
 	}
 	
 	public int size()  {
-		return start+1; 
+		return max+1; 
 	}
 	 
+	//TODO: fix
 	public double[] toArray() {
-		int start = start();
-		double[]dest = new double[start];
-        for (int i=0;i<start;i++) {
-        	dest[start-i-1] = get(i);
+		int begin = start();
+		double[]dest = new double[begin];
+        for (int i=0;i<begin;i++) {
+        	dest[begin-i-1] = get(i);
         }
         return dest;        
 	}
 	
 	public double add(double obj) {
 		++head;
-		if (head>=size) head=0;
+		if (head>=capacity) head=0;
 		double prev = elements[head];
-		elements[head] = obj;
-		if (start<size-1) ++start; //TODO: need this?
-		//if (head>max) max=head;
+		elements[head] = obj;	
+		
+		if (max<capacity-1) 
+			++max; 
 		return prev;
 	}
 	
+	public int start () {
+		return max;
+	}
+	public int start(int limit ) {
+		return Math.min(max,limit);
+	}
+	  
+	//pad with zeros usually - if min >max, reset indices!
+	public double pad(double obj) {
+		++head;
+		if (head>=capacity) head=0;
+		double prev = elements[head];
+		elements[head] = obj;			
+		if (max<capacity-1) 
+			++max; 
+		++min;
+		if (min>max) {
+			min=-1;max=-1; 
+		}
+		return prev;
+	}
+	
+	
 	public void set(int i,double obj) {
-		if (i>=size || i<0)
+		if (i>=capacity || i<0)
 			throw new IndexOutOfBoundsException();
-		if (i>start) 
-			start=i;
+		if (i>max) 
+			max=i;
+		if (i<min)
+			min=i;
 		int index= (head-i);
-		if (index<0) index = size-Math.abs(index);
+		if (index<0) index = capacity-Math.abs(index);
 		elements[index]=obj; 
 	}
 	
@@ -90,10 +115,10 @@ public class RingBufferArray implements  ISeq {
 		return get(0);
 	}
 	public double get(int i) {
-		if (i>start || i<0)
+		if (i>max || i<0) 
 			throw new IndexOutOfBoundsException();
 		int index= (head-i);
-		if (index<0) index = size-Math.abs(index);
+		if (index<0) index = capacity-Math.abs(index);
 		return elements[index]; 
 	}
 

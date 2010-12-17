@@ -22,6 +22,6 @@ public abstract class PriceIndicator  extends Indicator {
 	}
 	
 	public int limit () {
-		return (rates_total()-prev-1); //rates_total-prev-1
+		return Math.max((rates_total()-prev-1),0); //rates_total-prev-1
 	}
 }

@@ -27,7 +27,7 @@ public class SMA extends PriceIndicator {
 	    for (int i=limit;i>=0;i--) {
 	    	sum = sum-price(i+period)+price(i);
 	    	set(i,sum/period); 
-	    }    
+	    }     
 	    return rates_total;
 	 }
 }

@@ -4,3 +4,5 @@
 	   (indicators.collection PriceStream)
 	   indicators.utils.Csv))
  
+;;TODO: shifting tests
+

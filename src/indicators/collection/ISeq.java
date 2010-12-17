@@ -2,7 +2,7 @@ package indicators.collection;
 
 //OK - so sequence has grown into something weird....
 public interface ISeq extends Iterable<Double>{ 
-	public double add(double obj);
+	public double add(double obj); 
 	public void set(int i,double obj);
 	public void shift(long by);
 	public int ex(); 
@@ -12,5 +12,7 @@ public interface ISeq extends Iterable<Double>{
 	public double get();
 	public double[] toArray();	
 	public int start(); 
+	public int start(int limit);
+	
 	public int capacity();  
 }
