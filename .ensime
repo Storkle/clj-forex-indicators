@@ -1,0 +1,15 @@
+;; This config was generated using ensime-config-gen. Feel free to customize its contents manually.
+
+(
+
+:project-name "indicators"
+
+:project-package "indicators"
+
+:sources ("./src/")
+
+:compile-jars ("./")
+
+:target "./classes/"
+
+)
