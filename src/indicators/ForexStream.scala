@@ -15,3 +15,4 @@ object ForexStream {
 class ForexStream(val symbol:String,val timeframe:Int,the_capacity:Int=1000) extends PriceStream(the_capacity) {
   var headTime:Long = 0
 }
+ 
