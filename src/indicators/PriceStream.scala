@@ -6,7 +6,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock
 trait TReference {
   def diff(i:Long):Long
   def head():Long
-  def update():Unit
+  //def update():Unit
 }
 
 //perhaps useful for external lock coordination
