@@ -1,4 +1,4 @@
-(defproject org.clojars.storkle/clj-forex-indicators "0.1"
+(defproject org.clojars.starry/clj-forex-indicators "0.1"
   :description "indicator library for clj-forex" 
   :dev-dependencies [[lein-clojars "0.6.0"]  
 		     [org.scalatest/scalatest "1.2"]
@@ -7,4 +7,5 @@
                  [org.clojure/clojure-contrib "1.2.0"]
 		 [org.scala-lang/scala-library "2.8.1"]]
   :repositories {"scalatest" "http://www.scala-tools.org/repo-releases/"})
-      
+
+       
