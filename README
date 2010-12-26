@@ -1,0 +1,1 @@
+in order to compile, i use emacs and ensime. this compiles into the classes file and i then go lein install.
