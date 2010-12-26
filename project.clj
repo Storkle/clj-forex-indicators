@@ -7,7 +7,7 @@
 		     [swank-clojure "1.3.0-SNAPSHOT"]]
   :dependencies [[org.clojure/clojure "1.2.0"]
                  [org.clojure/clojure-contrib "1.2.0"]
-		 [org.scala-lang/scala-library "2.8.1"]]
+		 [org.scala-lang/scala-library "2.8.1"]] 
   :repositories {"scalatest" "http://www.scala-tools.org/repo-releases/"})
 
         

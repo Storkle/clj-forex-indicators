@@ -2,14 +2,14 @@
 
 (
 
-:project-name "indicators"
+:project-name "clj-forex-indicators"
 
 :project-package "indicators"
 
 :sources ("./src/")
 
-:compile-jars ("./")
+:compile-jars ("./lib/")
 
-:target "./classes/"
+:target "./classes"
 
 )
