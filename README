@@ -1,9 +1,10 @@
 INSTALL
+
 using lein
 [org.clojars.starry/clj-forex-indicators "0.1"]
 
 ABOUT
-indicator library for clj-forex
+indicator library for clj-forex.
 
 In order to compile, i use emacs and ensime (havent found out how to do a scalac task in leiningen).
 This compiles into the classes file and i then go lein install.
